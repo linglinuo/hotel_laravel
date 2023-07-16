@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Http\Helpers\RSA;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
-use Carbon\Carbon;
 
 class AuthController extends Controller
 {
+
     public function register(RegisterRequest $request)
     {
         $user = User::create([
@@ -29,6 +31,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $request['password'] = RSA::rsa_decode($request['password']);
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
