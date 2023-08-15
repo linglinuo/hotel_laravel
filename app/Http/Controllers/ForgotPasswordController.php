@@ -24,7 +24,7 @@ class ForgotPasswordController extends Controller
             'created_at' => Carbon::now()
         ]);
 
-        Mail::send('mails.resetPassword', ['token' => $token], function ($message) use ($request) {
+        Mail::send('mails.resetPassword', ['token' => $token, 'email' => $request->email], function ($message) use ($request) {
             $message->to($request->email);
             $message->subject('Reset Password');
         });
@@ -34,30 +34,27 @@ class ForgotPasswordController extends Controller
         ]);
     }
 
-    public function showResetPasswordForm(Request $request)
+    public function showResetPasswordForm($token, $email)
     {
-        return view('redirect')->with('query', 'action=resetPassword');
+        return view('redirect')->with('query', 'action=resetPassword&email=' . $email);
     }
 
     public function submitResetPasswordForm(Request $request)
     {
         $request->validate([
             'email' => 'required|email|exists:users',
-            'password' => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required'
+            'password' => 'required|string|min:8',
         ]);
-
         $updatePassword = DB::table('password_reset_tokens')
             ->where([
                 'email' => $request->email,
                 'token' => $request->token
             ])
             ->first();
-
         if (!$updatePassword) {
-            return back()->withInput()->with('error', 'Invalid token!');
+            return view('redirect')->with('query', 'action=resetPassword')->with('error', 'Invalid token!');
         }
-
+        dd('123');
         User::where('email', $request->email)
             ->update(['password' => Hash::make($request->password)]);
 

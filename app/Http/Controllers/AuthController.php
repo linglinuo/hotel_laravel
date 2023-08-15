@@ -55,18 +55,16 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = User::where('email', $credentials['email'])->first();
-            if($user->is_email_verified)
-            {
+            if ($user->is_email_verified) {
                 return response([
                     'message' => 'You have successfully logged in!',
                     'login_token' =>  $user->createToken($user->email)->plainTextToken
                 ], Response::HTTP_OK);
-            }else{
+            } else {
                 return response([
                     'message' => 'You need to confirm your account. We have sent you an activation code, please check your email.',
                 ], Response::HTTP_UNAUTHORIZED);
             }
-            
         }
         return response([
             'email' => $request['email'],
@@ -76,9 +74,8 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
+        $request->user()->currentAccessToken()->delete();
 
-        Auth::logout();
         return  response([
             'message' => 'Logged out.'
         ], Response::HTTP_OK);
@@ -101,6 +98,6 @@ class AuthController extends Controller
                 $message = "Your e-mail is already verified. You can now login.";
             }
         }
-        return view('redirect')->with('message', $message)->with('query', null);
+        return view('redirect')->with('message', $message)->with('query', 'action=login');
     }
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
@@ -27,9 +28,16 @@ Route::group(['middleware' => ['api', 'auth:sanctum', 'is_verify_email']], funct
         Route::post('/logout', 'logout')->name('logout');
         Route::post('/tokens', 'tokens')->name('tokens');
     });
+
+    Route::controller(UserProfileController::class)->group(function () {
+        Route::get('/user', 'get')->name('userProfile.get');
+        Route::put('/user', 'update')->name('userProfile.update');
+        Route::put('/user/img', 'updateimg')->name('userProfile.updateimg');
+    });
 });
 
 Route::post('/forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forgetpassword.post');
 Route::post('/reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('resetpassword.post');
 
-Route::get('/sendmail', [MailController::class, 'index']);
+
+// Route::get('/sendmail', [MailController::class, 'index']);
