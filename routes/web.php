@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+// use App\Http\Controllers\AccessController;
+// use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\ForgotPasswordController;
 
 /*
@@ -20,10 +22,24 @@ Route::get('/', function () {
     return File::get(public_path() . '/index.html');
 });
 
-Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify'); 
-// Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forgetpassword.get');
-Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('resetpassword.get');
+Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify');
+Route::get('reset-password/{token}/{email}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('resetpassword.get');
 
-// Route::get('/index', function () {
-//     return File::get(public_path() . '/index.html');
-// })->name('index');
+
+// Route::middleware(['auth', 'user-access:user'])->group(function () {
+  
+//     Route::get('/home', [AccessController::class, 'index'])->name('home');
+// });
+
+// Route::middleware(['auth', 'user-access:admin'])->group(function () {
+  
+//     Route::get('/admin/home', [AccessController::class, 'adminHome'])->name('admin.home');
+// });
+
+// Route::middleware(['auth', 'user-access:manager'])->group(function () {
+  
+//     Route::get('/manager/home', [AccessController::class, 'managerHome'])->name('manager.home');
+// });
+
+// Route::get('/auth/google', [SocialiteController::class, 'googleLogin'])->name('/auth/google');
+// Route::get('/auth/google/callback', [SocialiteController::class, 'googleLoginCallback'])->name('/auth/google/callback');

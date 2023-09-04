@@ -3,10 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MailController;
+// use App\Http\Controllers\MailController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserProfileController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+// use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,10 +35,17 @@ Route::group(['middleware' => ['api', 'auth:sanctum', 'is_verify_email']], funct
         Route::put('/user', 'update')->name('userProfile.update');
         Route::put('/user/img', 'updateimg')->name('userProfile.updateimg');
     });
+
+    Route::controller(RoomController::class)->group(function () {
+        Route::get('/room', 'index')->name('room.index');
+        Route::get('/room/info/{id}', 'get')->name('room.get');
+        Route::put('/room/info/{id}', 'update')->name('room.update');
+        Route::put('/room/info/{id}/img', 'updateimg')->name('room.updateimg');
+        Route::delete('/room/delete', 'delete')->name('room.delete');
+    });
 });
 
 Route::post('/forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forgetpassword.post');
 Route::post('/reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('resetpassword.post');
-
 
 // Route::get('/sendmail', [MailController::class, 'index']);
