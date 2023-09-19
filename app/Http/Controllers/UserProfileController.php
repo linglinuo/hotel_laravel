@@ -9,6 +9,31 @@ use Illuminate\Http\Response;
 
 class UserProfileController extends Controller
 {
+    public function index()
+    {
+        $members = User::all()->makeHidden([
+            'photo',
+            'info',
+            'members',
+            'created_at',
+            'updated_at'
+        ]);
+
+        foreach ($members as $member) {
+            $user = User::whereEmail($member->email)->first();
+            $profile = UserProfile::whereUserId($user->id)->first();
+            $member->user_id = $user->id;
+            $member->user_name = $user->name;
+            $member->user_phone = $profile->phone;
+            $member->user_photo = $profile->photo;
+        }
+
+        return response([
+            'message' => 'user list',
+            'data' => $members,
+        ], Response::HTTP_OK);
+    }
+
     public function get(Request $request)
     {
         $user = User::find($request->user()->id);
@@ -71,6 +96,16 @@ class UserProfileController extends Controller
 
         return response([
             'message' => 'Profile updated successfully!',
+        ], Response::HTTP_OK);
+    }
+
+    public function destroy(Request $request)
+    {
+        $user = UserProfile::where('user_id', $request->user()->id)->first();
+        $user->delete();
+
+        return response([
+            'message' => 'Profile deleted successfully!',
         ], Response::HTTP_OK);
     }
 }

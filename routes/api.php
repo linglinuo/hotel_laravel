@@ -31,9 +31,11 @@ Route::group(['middleware' => ['api', 'auth:sanctum', 'is_verify_email']], funct
     });
 
     Route::controller(UserProfileController::class)->group(function () {
+        Route::get('/user/list', 'index')->name('userProfile.index');
         Route::get('/user', 'get')->name('userProfile.get');
         Route::put('/user', 'update')->name('userProfile.update');
         Route::put('/user/img', 'updateimg')->name('userProfile.updateimg');
+        Route::post('/delete-user', 'destroy')->name('userProfile.delete');
     });
 
     Route::controller(RoomController::class)->group(function () {

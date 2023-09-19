@@ -15,7 +15,26 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $room = Room::table('rooms')->paginate(10);
+        $rooms = Room::all()->makeHidden([
+            'photo',
+            'info',
+            'members',
+            'created_at',
+            'updated_at'
+        ]);
+
+        foreach ($rooms as $room) {
+            $user = User::whereEmail($room->email)->first();
+            $profile = UserProfile::whereUserId($user->id)->first();
+            $room->user_name = $user->name;
+            $room->user_phone = $profile->phone;
+            $room->user_photo = $profile->photo;
+        }
+
+        return response([
+            'message' => 'room list',
+            'data' => $rooms,
+        ], Response::HTTP_OK);
     }
 
 
