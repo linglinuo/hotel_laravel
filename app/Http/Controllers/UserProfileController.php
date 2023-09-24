@@ -24,6 +24,7 @@ class UserProfileController extends Controller
             $profile = UserProfile::whereUserId($user->id)->first();
             $member->user_id = $user->id;
             $member->user_name = $user->name;
+            $member->user_email = $member->email;
             $member->user_phone = $profile->phone;
             $member->user_photo = $profile->photo;
         }
@@ -99,9 +100,9 @@ class UserProfileController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
-        $user = UserProfile::where('user_id', $request->user()->id)->first();
+        $user = User::find($id);
         $user->delete();
 
         return response([
