@@ -13,8 +13,6 @@ class UserProfileController extends Controller
     {
         $members = User::all()->makeHidden([
             'photo',
-            'info',
-            'members',
             'created_at',
             'updated_at'
         ]);
@@ -47,6 +45,23 @@ class UserProfileController extends Controller
                 "email" => $user->email,
                 "phone" => $profile->phone,
                 "birthday" => $profile->birthday,
+                "img" => $profile->photo
+            ]
+        ], Response::HTTP_OK);
+    }
+
+    //搜尋人
+    public function search(Request $request, $email)
+    {
+        $user = User::where('email', $email)->first();
+        $profile = UserProfile::where('user_id', $user->id)->first();
+
+        return response([
+            'message' => 'user profile',
+            'data' => [
+                "name" => $user->name,
+                "email" => $user->email,
+                "phone" => $profile->phone,
                 "img" => $profile->photo
             ]
         ], Response::HTTP_OK);

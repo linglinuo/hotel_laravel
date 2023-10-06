@@ -31,6 +31,7 @@ Route::group(['middleware' => ['api', 'auth:sanctum', 'is_verify_email']], funct
     });
 
     Route::controller(UserProfileController::class)->group(function () {
+        Route::get('/user/search/{email}', 'search')->name('userProfile.search');
         Route::get('/user/list', 'index')->name('userProfile.index');
         Route::get('/user', 'get')->name('userProfile.get');
         Route::put('/user', 'update')->name('userProfile.update');
@@ -39,11 +40,13 @@ Route::group(['middleware' => ['api', 'auth:sanctum', 'is_verify_email']], funct
     });
 
     Route::controller(RoomController::class)->group(function () {
+        Route::get('/room/search', 'search')->name('userProfile.search');
         Route::get('/room', 'index')->name('room.index');
         Route::get('/room/info/{id}', 'get')->name('room.get');
         Route::put('/room/info/{id}', 'update')->name('room.update');
         Route::put('/room/info/{id}/img', 'updateimg')->name('room.updateimg');
         Route::delete('/room/delete', 'delete')->name('room.delete');
+        Route::put('/room/info/{id}/member', 'updateroommember')->name('room.updateroommember');
     });
 });
 
