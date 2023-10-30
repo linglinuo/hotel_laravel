@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('small_marks_time')->nullable();
             $table->string('small_marks_people')->nullable();
             $table->string('small_marks_other')->nullable();
+            $table->string('on_name')->nullable(); //若選擇其他的開啟，動作名稱設置
+            $table->string('off_name')->nullable(); //若選擇其他的關閉，動作名稱設置
             $table->string('type');
             $table->string('switches')->nullable();
             $table->timestamps();

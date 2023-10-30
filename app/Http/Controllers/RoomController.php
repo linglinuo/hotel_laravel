@@ -41,15 +41,24 @@ class RoomController extends Controller
     //會員可控制的所有房間
     public function search(Request $request)
     {
-        $user = User::find($request->user()->id);
-        $rooms = RoomMember::where('member', $request->user()->id);
+        $rooms = RoomMember::where('user_id', $request->user()->id)->get();
         foreach ($rooms as $room) {
-            $profile = Room::where('no', $request->roomMembers()->room_id)->first();
-            $room->room_no = $profile->no;
-            $room->room_type = $profile->type;
-            $room->room_name = $profile->room_name;
-            $room->room_info = $profile->info;
-            $room->room_photo = $profile->photo;
+            $roomInfo = Room::find($room->room_id);
+            $sharedUsers = RoomMember::whereRoomId($room->room_id)->get();
+            foreach ($sharedUsers as $users) {
+                $user = User::find($users->user_id);
+                $userProfile = UserProfile::whereUserId($users->user_id)->first();
+                $users->name = $user->name;
+                $users->email = $user->email;
+                $users->phone = $userProfile->phone;
+                $users->photo = $userProfile->photo;
+            }
+            $room->no = $roomInfo->no;
+            $room->type = $roomInfo->type;
+            $room->name = $roomInfo->room_name;
+            $room->info = $roomInfo->info;
+            $room->photo = $roomInfo->photo;
+            $room->authors = $sharedUsers;
         }
 
         return response([
@@ -142,6 +151,44 @@ class RoomController extends Controller
             'email' => 'required|array',
             'email.*' => 'required|string',
         ]);
+
+        RoomMember::whereRoomId($room_id)->delete();
+
+        foreach ($request->email as $email) {
+            $user = User::whereEmail($email)->first();
+            RoomMember::create([
+                'room_id' => $room_id,
+                'user_id' => $user->id,
+            ]);
+        }
+
+        $allUsers = User::all();
+        $allUsersId = [];
+        foreach ($allUsers as $user) {
+            $allUsersId[] = $user->id;
+        }
+        $sharedUsers = RoomMember::whereRoomId($room_id)->whereNotIn('user_id', $allUsersId)->get();
+        foreach ($sharedUsers as $users) {
+            $user = User::find($users->user_id);
+            $userProfile = UserProfile::whereUserId($users->user_id)->first();
+            $users->name = $user->name;
+            $users->email = $user->email;
+            $users->phone = $userProfile->phone;
+            $users->photo = $userProfile->photo;
+        }
+
+        return response([
+            'message' => 'Room photo updated successfully!',
+            'data' => $sharedUsers,
+        ], Response::HTTP_OK);
+    }
+
+    public function removeroommember(Request $request, $room_id)
+    {
+        $request->validate([
+            'email' => 'required|array',
+            'email.*' => 'required|string',
+        ]);
         RoomMember::whereRoomId($room_id)->delete();
         foreach ($request->email as $email) {
             $user = User::whereEmail($email)->first();
@@ -158,11 +205,26 @@ class RoomController extends Controller
             }
         }
 
+        $allUsers = User::all();
+        $allUsersId = [];
+        foreach ($allUsers as $user) {
+            $allUsersId[] = $user->id;
+        }
+        $sharedUsers = RoomMember::whereRoomId($room_id)->whereNotIn('user_id', $allUsersId)->get();
+        foreach ($sharedUsers as $users) {
+            $user = User::find($users->user_id);
+            $userProfile = UserProfile::whereUserId($users->user_id)->first();
+            $users->name = $user->name;
+            $users->email = $user->email;
+            $users->phone = $userProfile->phone;
+            $users->photo = $userProfile->photo;
+        }
+
         return response([
             'message' => 'Room photo updated successfully!',
+            'data' => $sharedUsers,
         ], Response::HTTP_OK);
     }
-
 
     public function updateimg(Request $request, $id)
     {
@@ -187,7 +249,7 @@ class RoomController extends Controller
         Room::where('id', $request->room()->id)->first()->delete();
 
         return response([
-            'message' => 'Room photo deleted successfully!',
+            'message' => 'Room deleted successfully!',
         ], Response::HTTP_OK);
     }
 }

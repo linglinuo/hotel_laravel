@@ -6,24 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Room extends Model
+class BasicElement extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'no',
+        'name',
+        'board',
+        'small_marks_date',
+        'small_marks_time',
+        'small_marks_people',
+        'small_marks_other',
+        'on_name',
+        'off_name',
         'type',
-        'room_name',
-        'status',
-        'email',
-        'photo',
-        'info',
+        'switches',
     ];
-
-    public function roomMembers(): HasMany
-    {
-        return $this->hasMany(RoomMember::class);
-    }
     public function device(): HasMany
     {
         return $this->hasMany(Device::class);
