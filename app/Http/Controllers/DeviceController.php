@@ -36,6 +36,15 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function getBasicElement()
+    {
+        $devices = BasicElement::all();
+
+        return response([
+            'message' => 'Basic Element Lists',
+            'data' => $devices,
+        ], Response::HTTP_OK);
+    }
 
     public function updateDevices(Request $request)
     {

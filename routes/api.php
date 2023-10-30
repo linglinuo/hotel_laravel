@@ -58,6 +58,7 @@ Route::controller(DeviceController::class)->group(function () {
     Route::get('/device/updateDeviceConnect', 'updateDeviceConnect')->name('device.updateDeviceConnect');
     Route::get('/device', 'index')->name('device.index');
     Route::get('/device/info', 'get')->name('device.get');
+    Route::get('/device/basicElement', 'getBasicElement')->name('device.getBasicElement');
     Route::put('/device/info/updateDevices', 'updateDevices')->name('device.update');
     Route::post('/device/info/updateDeviceDatas', 'updateDeviceDatas')->name('device.updateDeviceDatas');
 });
