@@ -49,11 +49,10 @@ class DeviceController extends Controller
 
     public function destroy()
     {
-        $devices = DeviceData::all()->delete;
+        DeviceData::whereNotNull('id')->delete;
 
         return response([
-            'message' => 'Basic Element Lists',
-            'data' => $devices,
+            'message' => 'Device deleted successfully!',
         ], Response::HTTP_OK);
     }
 
