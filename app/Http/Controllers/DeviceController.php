@@ -79,12 +79,14 @@ class DeviceController extends Controller
             'humidity' => 'string|nullable',
             'ctrl_cmd' => 'string|nullable',
         ]);
-        $return = DeviceData::create([
-            'device_id' => $request->device_id,
-            'temp' => $request->temp,
-            'humidity' => $request->humidity,
-            'ctrl_cmd' => $request->ctrl_cmd,
-        ]);
+        if ($request->ctrl_cmd != "no data") {
+            $return = DeviceData::create([
+                'device_id' => $request->device_id,
+                'temp' => $request->temp,
+                'humidity' => $request->humidity,
+                'ctrl_cmd' => $request->ctrl_cmd,
+            ]);
+        }
 
         return response([
             'message' => 'Device updated successfully!',
