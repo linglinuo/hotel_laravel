@@ -48,8 +48,8 @@ class BasicElementsController extends Controller
             'type' => 'string',
             'switches' => 'string',
         ]);
-        if (BasicElement::where('name', $request->name())->first()) {
-            BasicElement::where('name', $request->name())->update([
+        if (BasicElement::where('name', $request->name)->first()) {
+            $return_id = BasicElement::where('name', $request->name)->update([
                 'name' => $request->name,
                 'board' => $request->board,
                 'small_marks_date' => $request->small_marks_date,
@@ -78,6 +78,7 @@ class BasicElementsController extends Controller
 
         return response([
             'message' => 'BasicElement updated successfully!',
+            'data' => $return_id
         ], Response::HTTP_OK);
     }
 

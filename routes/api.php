@@ -55,7 +55,7 @@ Route::group(['middleware' => ['api', 'auth:sanctum', 'is_verify_email']], funct
 Route::post('/forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forgetpassword.post');
 Route::post('/reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('resetpassword.post');
 Route::controller(DeviceController::class)->group(function () {
-    Route::get('/device/updateDeviceConnect', 'updateDeviceConnect')->name('device.updateDeviceConnect');
+    Route::get('/room/{roomId}/device/{uuid}/updateDeviceConnect', 'updateDeviceConnect')->name('device.updateDeviceConnect');
     Route::get('/device', 'index')->name('device.index');
     Route::get('/device/info', 'get')->name('device.get');
     Route::get('/device/basicElement', 'getBasicElement')->name('device.getBasicElement');

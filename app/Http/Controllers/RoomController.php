@@ -25,11 +25,13 @@ class RoomController extends Controller
         ]);
 
         foreach ($rooms as $room) {
-            $user = User::whereEmail($room->email)->first();
-            $profile = UserProfile::whereUserId($user->id)->first();
-            $room->user_name = $user->name;
-            $room->user_phone = $profile->phone;
-            $room->user_photo = $profile->photo;
+            if($room->email) {
+                $user = User::whereEmail($room->email)->first();
+                $profile = UserProfile::whereUserId($user->id)->first();
+                $room->user_name = $user->name;
+                $room->user_phone = $profile->phone;
+                $room->user_photo = $profile->photo;
+            }
         }
 
         return response([
@@ -111,10 +113,11 @@ class RoomController extends Controller
             'no' => 'string',
             'type' => 'int',
             'room_name' => 'string',
-            'status' => 'string',
-            'email' => 'string|nullable',
+            'status' => 'int',
+            'email' => 'nullable|string',
             'info' => 'string',
         ]);
+        
         $return_id = '';
         if (Room::where('id', $id)->first()) {
             $return_id = $id;

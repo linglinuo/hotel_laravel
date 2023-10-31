@@ -10,12 +10,13 @@ use Illuminate\Http\Response;
 
 class DeviceController extends Controller
 {
-    
-    //前端
-    public function updateDeviceConnect(Request $request)
+
+    //前端call後端
+    public function updateDeviceConnect(Request $request, $roomId, $uuid)
     {
-        Device::where('device_id', $request->device_id())->create([
+        Device::where('device_id', $uuid)->update([
             'basic_element_id' => $request->basic_element_id,
+            'room_id' => $roomId,
         ]);
 
         return response([
@@ -46,11 +47,11 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function updateDevices(Request $request)
+    //硬體call後端
+    public function updateDevices(Request $request) //需修
     {
         $request->validate([
             'device_id' => 'string',
-            'room_id' => 'string|nullable',
             'created' => 'boolean',
         ]);
         if (Device::where('device_id', $request->device_id())->first()) {
@@ -59,7 +60,7 @@ class DeviceController extends Controller
                 'created' => $request->created,
             ]);
         } else {
-            $return = BasicElement::create([
+            $return = Device::create([
                 'device_id' => $request->device_id,
                 'created' => $request->created,
             ]);
@@ -78,7 +79,7 @@ class DeviceController extends Controller
             'humidity' => 'string|nullable',
             'ctrl_cmd' => 'string|nullable',
         ]);
-        $return = BasicElement::create([
+        $return = DeviceData::create([
             'device_id' => $request->device_id,
             'temp' => $request->temp,
             'humidity' => $request->humidity,
