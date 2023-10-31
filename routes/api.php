@@ -59,6 +59,7 @@ Route::controller(DeviceController::class)->group(function () {
     Route::get('/device', 'index')->name('device.index');
     Route::get('/device/info', 'get')->name('device.get');
     Route::get('/device/basicElement', 'getBasicElement')->name('device.getBasicElement');
+    Route::delete('/device/delete', 'destroy')->name('device.delete');
     Route::put('/device/info/updateDevices', 'updateDevices')->name('device.update');
     Route::post('/device/info/updateDeviceDatas', 'updateDeviceDatas')->name('device.updateDeviceDatas');
 });

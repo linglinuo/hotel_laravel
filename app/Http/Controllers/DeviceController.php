@@ -47,6 +47,16 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function destroy()
+    {
+        $devices = DeviceData::all()->delete;
+
+        return response([
+            'message' => 'Basic Element Lists',
+            'data' => $devices,
+        ], Response::HTTP_OK);
+    }
+
     //硬體call後端
     public function updateDevices(Request $request) //需修
     {
