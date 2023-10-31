@@ -39,7 +39,7 @@ class DeviceController extends Controller
 
     public function getBasicElement()
     {
-        $devices = BasicElement::all();
+        $devices = DeviceData::all();
 
         return response([
             'message' => 'Basic Element Lists',
