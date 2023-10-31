@@ -47,15 +47,6 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function destroy()
-    {
-        DeviceData::whereNotNull('id')->delete;
-
-        return response([
-            'message' => 'Device deleted successfully!',
-        ], Response::HTTP_OK);
-    }
-
     //硬體call後端
     public function updateDevices(Request $request) //需修
     {
