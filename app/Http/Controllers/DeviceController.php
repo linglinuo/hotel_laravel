@@ -37,12 +37,22 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function getBasicElement()
+    public function getDataElement()
     {
-        $devices = DeviceData::all();
+        $data = DeviceData::all();
 
         return response([
-            'message' => 'Basic Element Lists',
+            'message' => 'Device Data Lists',
+            'data' => $data,
+        ], Response::HTTP_OK);
+    }
+
+    public function getDeviceElement()
+    {
+        $devices = Device::all();
+
+        return response([
+            'message' => 'Device Lists',
             'data' => $devices,
         ], Response::HTTP_OK);
     }
@@ -74,18 +84,32 @@ class DeviceController extends Controller
     public function updateDeviceDatas(Request $request)
     {
         $request->validate([
-            'device_id' => 'string',
+            'device_id' => 'require|string',
             'temp' => 'string|nullable',
             'humidity' => 'string|nullable',
             'ctrl_cmd' => 'string|nullable',
         ]);
         if ($request->ctrl_cmd != "no data") {
-            $return = DeviceData::create([
-                'device_id' => $request->device_id,
-                'temp' => $request->temp,
-                'humidity' => $request->humidity,
-                'ctrl_cmd' => $request->ctrl_cmd,
-            ]);
+            if (DeviceData::where('device_id', $request->device_id())
+                ->where('ctrl_cmd', $request->ctrl_cmd())
+                ->first()
+            ) {
+                DeviceData::where('device_id', $request->device_id()
+                    ->where('ctrl_cmd', $request->ctrl_cmd()))
+                    ->update([
+                        'device_id' => $request->device_id,
+                        'temp' => $request->temp,
+                        'humidity' => $request->humidity,
+                        'ctrl_cmd' => $request->ctrl_cmd,
+                    ]);
+            } else {
+                $return = DeviceData::create([
+                    'device_id' => $request->device_id,
+                    'temp' => $request->temp,
+                    'humidity' => $request->humidity,
+                    'ctrl_cmd' => $request->ctrl_cmd,
+                ]);
+            }
         }
 
         return response([
