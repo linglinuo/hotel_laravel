@@ -118,7 +118,7 @@ class DeviceController extends Controller
 
         return response([
             'message' => 'Device updated successfully!',
-            'data' => $return,
+            'data' => $return
         ], Response::HTTP_OK);
     }
 }
