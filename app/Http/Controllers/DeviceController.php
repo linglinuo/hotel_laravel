@@ -64,17 +64,7 @@ class DeviceController extends Controller
             'device_id' => 'string',
             'created' => 'boolean',
         ]);
-        if (Device::where('device_id', $request->device_id())->first()) {
-            Device::where('device_id', $request->device_id())->update([
-                'device_id' => $request->device_id,
-                'created' => $request->created,
-            ]);
-        } else {
-            $return = Device::create([
-                'device_id' => $request->device_id,
-                'created' => $request->created,
-            ]);
-        }
+
 
         return response([
             'message' => 'Device updated successfully!',
@@ -84,26 +74,40 @@ class DeviceController extends Controller
     public function updateDeviceDatas(Request $request)
     {
         $request->validate([
-            'device_id' => 'require|string',
+            'device_id' => 'required|string',
             'temp' => 'string|nullable',
             'humidity' => 'string|nullable',
             'ctrl_cmd' => 'string|nullable',
         ]);
+
         if ($request->ctrl_cmd != "no data") {
-            if (DeviceData::where('device_id', $request->device_id())
-                ->where('ctrl_cmd', $request->ctrl_cmd())
-                ->first()
-            ) {
-                DeviceData::where('device_id', $request->device_id()
-                    ->where('ctrl_cmd', $request->ctrl_cmd()))
-                    ->update([
+            if (Device::where('device_id', $request->device_id)->first()) {
+                if (DeviceData::where('device_id', $request->device_id)
+                    ->where('ctrl_cmd', $request->ctrl_cmd)
+                    ->first()
+                ) {
+                    DeviceData::where('device_id', $request->device_id)
+                        ->where('ctrl_cmd', $request->ctrl_cmd)
+                        ->update([
+                            'device_id' => $request->device_id,
+                            'temp' => $request->temp,
+                            'humidity' => $request->humidity,
+                            'ctrl_cmd' => $request->ctrl_cmd,
+                        ]);
+                } else {
+                    $return = DeviceData::create([
                         'device_id' => $request->device_id,
                         'temp' => $request->temp,
                         'humidity' => $request->humidity,
                         'ctrl_cmd' => $request->ctrl_cmd,
                     ]);
+                }
             } else {
-                $return = DeviceData::create([
+                $return = Device::create([
+                    'device_id' => $request->device_id,
+                    'created' => false,
+                ]);
+                DeviceData::create([
                     'device_id' => $request->device_id,
                     'temp' => $request->temp,
                     'humidity' => $request->humidity,
