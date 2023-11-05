@@ -80,6 +80,8 @@ class DeviceController extends Controller
             'ctrl_cmd' => 'string|nullable',
         ]);
 
+        $return = null;
+
         if ($request->ctrl_cmd != "no data") {
             if (Device::where('device_id', $request->device_id)->first()) {
                 if (DeviceData::where('device_id', $request->device_id)
