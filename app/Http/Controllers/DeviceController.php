@@ -57,20 +57,6 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
-    //硬體call後端
-    public function updateDevices(Request $request) //需修
-    {
-        $request->validate([
-            'device_id' => 'string',
-            'created' => 'boolean',
-        ]);
-
-
-        return response([
-            'message' => 'Device updated successfully!',
-        ], Response::HTTP_OK);
-    }
-
     public function updateDeviceDatas(Request $request)
     {
         $request->validate([
@@ -97,7 +83,7 @@ class DeviceController extends Controller
                             'ctrl_cmd' => $request->ctrl_cmd,
                         ]);
                 } else {
-                    $return = DeviceData::create([
+                    DeviceData::create([
                         'device_id' => $request->device_id,
                         'temp' => $request->temp,
                         'humidity' => $request->humidity,
@@ -105,7 +91,7 @@ class DeviceController extends Controller
                     ]);
                 }
             } else {
-                $return = Device::create([
+                Device::create([
                     'device_id' => $request->device_id,
                     'created' => false,
                 ]);
@@ -120,7 +106,6 @@ class DeviceController extends Controller
 
         return response([
             'message' => 'Device updated successfully!',
-            'data' => $return
         ], Response::HTTP_OK);
     }
 }

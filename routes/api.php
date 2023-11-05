@@ -60,7 +60,6 @@ Route::controller(DeviceController::class)->group(function () {
     Route::get('/device/info', 'get')->name('device.get');
     Route::get('/device/dataElement', 'getDataElement')->name('device.getDataElement');
     Route::get('/device/deviceElement', 'getDeviceElement')->name('device.getDeviceElement');
-    Route::put('/device/info/updateDevices', 'updateDevices')->name('device.update');
     Route::post('/device/info/updateDeviceDatas', 'updateDeviceDatas')->name('device.updateDeviceDatas');
 });
 Route::get('/test', function () {
