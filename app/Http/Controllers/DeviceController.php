@@ -47,6 +47,20 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function getDeviceCtrlCmd($id)
+    {
+        $data = DeviceData::whereDeviceId($id)->get();
+        $ctrlCmd = [];
+        foreach($data as $d){
+            $ctrlCmd[] = $d->ctrl_cmd;
+        }
+
+        return response([
+            'message' => 'Device Data Lists',
+            'data' => $ctrlCmd,
+        ], Response::HTTP_OK);
+    }
+
     public function getDeviceElement()
     {
         $devices = Device::all();

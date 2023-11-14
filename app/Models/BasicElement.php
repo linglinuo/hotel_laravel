@@ -13,14 +13,11 @@ class BasicElement extends Model
     protected $fillable = [
         'name',
         'board',
-        'small_marks_date',
-        'small_marks_time',
-        'small_marks_people',
-        'small_marks_other',
-        'on_name',
-        'off_name',
+        'default',
+        'small_marks',
         'type',
-        'switches',
+        'default_value',
+        'value',
     ];
     public function device(): HasMany
     {

@@ -14,7 +14,6 @@ class Device extends Model
     protected $fillable = [
         'device_id',
         'room_id',
-        'basic_element_id',
         'created',
     ];
 
@@ -25,9 +24,5 @@ class Device extends Model
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
-    }
-    public function basic_element_id(): BelongsTo
-    {
-        return $this->belongsTo(BasicElement::class,'basic_element_id', 'basic_element_id');
     }
 }

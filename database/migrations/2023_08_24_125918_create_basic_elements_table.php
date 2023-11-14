@@ -15,14 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('board');
-            $table->string('small_marks_date')->nullable();
-            $table->string('small_marks_time')->nullable();
-            $table->string('small_marks_people')->nullable();
-            $table->string('small_marks_other')->nullable();
-            $table->string('on_name')->nullable(); //若選擇其他的開啟，動作名稱設置
-            $table->string('off_name')->nullable(); //若選擇其他的關閉，動作名稱設置
+            $table->string('small_marks')->nullable();
             $table->string('type');
-            $table->string('switches')->nullable();
+            $table->string('default_value');
+            $table->string('value');//範圍值設置?
             $table->timestamps();
         });
     }

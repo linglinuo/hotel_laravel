@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BasicElementsController;
 use App\Http\Controllers\DeviceController;
 // use App\Http\Controllers\MailController;
 use App\Http\Controllers\ForgotPasswordController;
@@ -59,8 +60,13 @@ Route::controller(DeviceController::class)->group(function () {
     Route::get('/device', 'index')->name('device.index');
     Route::get('/device/info', 'get')->name('device.get');
     Route::get('/device/dataElement', 'getDataElement')->name('device.getDataElement');
+    Route::get('/device/deviceCtrlCmd/{id}', 'getDeviceCtrlCmd')->name('device.getDeviceCtrlCmd');
     Route::get('/device/deviceElement', 'getDeviceElement')->name('device.getDeviceElement');
     Route::post('/device/info/updateDeviceDatas', 'updateDeviceDatas')->name('device.updateDeviceDatas');
+});
+Route::controller(BasicElementsController::class)->group(function () {
+    Route::get('/basic-element/{id}', 'get')->name('basicElement.get');
+    Route::put('/basic-element', 'update')->name('basicElement.update');
 });
 Route::get('/test', function () {
     return 1;

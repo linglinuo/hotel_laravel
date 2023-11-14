@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('device_id');
             $table->string('room_id')->nullable();
-            $table->string('basic_element_id')->nullable();
             $table->boolean('created')->default(false);
             $table->timestamps();
         });
