@@ -65,6 +65,7 @@ Route::controller(DeviceController::class)->group(function () {
     Route::post('/device/info/updateDeviceDatas', 'updateDeviceDatas')->name('device.updateDeviceDatas');
 });
 Route::controller(BasicElementsController::class)->group(function () {
+    Route::get('/basic-element/room/{id}', 'index')->name('basicElement.index');
     Route::get('/basic-element/{id}', 'get')->name('basicElement.get');
     Route::put('/basic-element', 'update')->name('basicElement.update');
 });

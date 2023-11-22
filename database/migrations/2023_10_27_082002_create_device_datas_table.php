@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('temp')->nullable();
             $table->string('humidity')->nullable();
             $table->string('ctrl_cmd')->nullable();
+            $table->boolean('trigger')->default(false);
             $table->string('basic_element_id')->nullable();
             $table->timestamps();
         });

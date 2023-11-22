@@ -4,35 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\BasicElement;
 use App\Models\DeviceData;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class BasicElementsController extends Controller
 {
-    //BasicElement List
-    // public function index()
-    // {
-    //     $elements = BasicElement::all();
+    // BasicElement List
+    public function index($roomId)
+    {
+        //$elements = BasicElement::where();
+        $deviceId = Device::select('device_id')->whereRoomId($roomId)->first();
+        $deviceDatas = DeviceData::whereDeviceId($deviceId->device_id)->get();
+        $results = [];
 
-    //     foreach ($elements as $element) {
-    //         $BasicElement = BasicElement::whereID($element->id)->first();
-    //         $element->name = $BasicElement->name;
-    //         $element->board = $BasicElement->board;
-    //         $element->small_marks_date = $BasicElement->small_marks_date;
-    //         $element->small_marks_time = $BasicElement->small_marks_time;
-    //         $element->small_marks_people = $BasicElement->small_marks_people;
-    //         $element->small_marks_other = $BasicElement->small_marks_other;
-    //         $element->on_name = $BasicElement->on_name;
-    //         $element->off_name = $BasicElement->off_name;
-    //         $element->type = $BasicElement->type;
-    //         $element->switches = $BasicElement->switches;
-    //     }
+        foreach ($deviceDatas as $deviceData) {
+            $BasicElement = BasicElement::whereId($deviceData->basic_element_id)->first();
+            $BasicElement->uuid = $deviceId->device_id;
+            $results[] = $BasicElement;
+        }
 
-    //     return response([
-    //         'message' => 'Basic Element list',
-    //         'data' => $elements,
-    //     ], Response::HTTP_OK);
-    // }
+        return response([
+            'message' => 'Basic Element list',
+            'data' => $results,
+        ], Response::HTTP_OK);
+    }
 
     //前端基本元件資料更新
     public function update(Request $request)
@@ -40,6 +36,7 @@ class BasicElementsController extends Controller
         //
         $request->validate([
             'id' => 'string',
+            'room_id' => 'string',
             'name' => 'string',
             'board' => 'string',
             'small_marks' => 'array',
@@ -50,8 +47,9 @@ class BasicElementsController extends Controller
         ]);
         $encodeSmallMarks = json_encode($request->small_marks);
         $encodeValue = json_encode($request->value);
-        if (BasicElement::where('name', $request->name)->first()) {
-            $return_id = BasicElement::where('name', $request->name)->update([
+        $basicElement = BasicElement::where('name', $request->name)->first();
+        if ($basicElement) {
+            $return_id = BasicElement::whereId($basicElement->id)->update([
                 'name' => $request->name,
                 'board' => $request->board,
                 'small_marks' => $encodeSmallMarks,
@@ -70,6 +68,10 @@ class BasicElementsController extends Controller
             ]);
             DeviceData::whereDeviceId($request->id)->whereCtrlCmd($request->ctrl_cmd_group[0])->update([
                 'basic_element_id' => $return_id->id,
+            ]);
+            Device::whereDeviceId($request->id)->update([
+                'room_id' => $request->room_id,
+                'created' => $request->True,
             ]);
         }
 
