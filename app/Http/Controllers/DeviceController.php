@@ -17,10 +17,46 @@ class DeviceController extends Controller
         Device::where('device_id', $uuid)->update([
             'basic_element_id' => $request->basic_element_id,
             'room_id' => $roomId,
+            // 'created' => true,
         ]);
 
         return response([
             'message' => 'Device connected successfully!',
+        ], Response::HTTP_OK);
+    }
+
+    //前端觸發按鍵
+    public function controlDevice(Request $request, $uuid)
+    {
+        DeviceData::where('device_id', $uuid)->where('ctrl_cmd', $request->ctrl_cmd)->update([
+            'trigger' => true,
+        ]);
+
+        return response([
+            'message' => 'Device trigger!',
+        ], Response::HTTP_OK);
+    }
+
+    //硬體若已觸發
+    public function controlDeviceOK(Request $request, $uuid)
+    {
+        DeviceData::where('device_id', $uuid)->where('ctrl_cmd', $request->ctrl_cmd)->update([
+            'trigger' => false,
+        ]);
+
+        return response([
+            'message' => 'Device trigger OK!',
+        ], Response::HTTP_OK);
+    }
+
+    //若硬體抓trigger為True則get ctrl_cmd
+    public function triggerOrNot(Request $request, $uuid)
+    {
+        $data = DeviceData::select('ctrl_cmd')->where('device_id', $uuid)->where('trigger', true)->get();
+
+        return response([
+            'message' => 'Need trigger',
+            'data' => $data,
         ], Response::HTTP_OK);
     }
 
@@ -37,6 +73,7 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
+    //前端 get 後端儲存的 所有device 的 data (包含humidity、temperature、ctrl_cmd)
     public function getDataElement()
     {
         $data = DeviceData::all();
@@ -47,11 +84,12 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
+    //前端 get 後端儲存的 ctrl cmd
     public function getDeviceCtrlCmd($id)
     {
         $data = DeviceData::whereDeviceId($id)->get();
         $ctrlCmd = [];
-        foreach($data as $d){
+        foreach ($data as $d) {
             $ctrlCmd[] = $d->ctrl_cmd;
         }
 

@@ -16,6 +16,7 @@ class DeviceData extends Model
         'temp',
         'humidity',
         'ctrl_cmd',
+        'trigger',
         'basic_element_id',
     ];
 
