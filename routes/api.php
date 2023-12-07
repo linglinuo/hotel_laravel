@@ -63,6 +63,8 @@ Route::controller(DeviceController::class)->group(function () {
     Route::get('/device/deviceCtrlCmd/{id}', 'getDeviceCtrlCmd')->name('device.getDeviceCtrlCmd');
     Route::get('/device/deviceElement', 'getDeviceElement')->name('device.getDeviceElement');
     Route::post('/device/info/updateDeviceDatas', 'updateDeviceDatas')->name('device.updateDeviceDatas');
+    Route::post('/device/info/controlDeviceOK', 'controlDeviceOK')->name('device.controlDeviceOK');
+    Route::post('/device/info/triggerOrNot', 'triggerOrNot')->name('device.triggerOrNot');
 });
 Route::controller(BasicElementsController::class)->group(function () {
     Route::get('/basic-element/room/{id}', 'index')->name('basicElement.index');

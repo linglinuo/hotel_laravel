@@ -38,9 +38,9 @@ class DeviceController extends Controller
     }
 
     //硬體若已觸發
-    public function controlDeviceOK(Request $request, $uuid)
+    public function controlDeviceOK(Request $request) //post
     {
-        DeviceData::where('device_id', $uuid)->where('ctrl_cmd', $request->ctrl_cmd)->update([
+        DeviceData::where('device_id', $request->device_id)->where('ctrl_cmd', $request->ctrl_cmd)->update([
             'trigger' => false,
         ]);
 
@@ -50,9 +50,9 @@ class DeviceController extends Controller
     }
 
     //若硬體抓trigger為True則get ctrl_cmd
-    public function triggerOrNot(Request $request, $uuid)
+    public function triggerOrNot(Request $request) //post
     {
-        $data = DeviceData::select('ctrl_cmd')->where('device_id', $uuid)->where('trigger', true)->get();
+        $data = DeviceData::select('ctrl_cmd')->where('device_id', $request->device_id)->where('trigger', true)->get();
 
         return response([
             'message' => 'Need trigger',

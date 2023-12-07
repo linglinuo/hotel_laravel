@@ -20,10 +20,12 @@ class BasicElementsController extends Controller
 
         foreach ($deviceDatas as $deviceData) {
             $BasicElement = BasicElement::whereId($deviceData->basic_element_id)->first();
-            $BasicElement->uuid = $deviceId->device_id;
-            $BasicElement->ctrl_cmd = $deviceData->ctrl_cmd;
-            $BasicElement->roomId = $deviceId->room_id;
-            $results[] = $BasicElement;
+            if ($BasicElement) {
+                $BasicElement->uuid = $deviceId->device_id;
+                $BasicElement->ctrl_cmd = $deviceData->ctrl_cmd;
+                $BasicElement->roomId = $deviceId->room_id;
+                $results[] = $BasicElement;
+            }
         }
 
         return response([
@@ -56,7 +58,7 @@ class BasicElementsController extends Controller
                 'board' => $request->board,
                 'small_marks' => $encodeSmallMarks,
                 'type' => $request->type,
-                'default_value' => $request->default_value,
+                'default_value' => $request->default_value ? $request->default_value : "",
                 'value' => $encodeValue,
             ]);
             DeviceData::whereDeviceId($request->id)->whereCtrlCmd($request->ctrl_cmd_group)->update([
@@ -68,7 +70,7 @@ class BasicElementsController extends Controller
                 'board' => $request->board,
                 'small_marks' => $encodeSmallMarks,
                 'type' => $request->type,
-                'default_value' => $request->default_value,
+                'default_value' => $request->default_value ? $request->default_value : "",
                 'value' => $encodeValue,
             ]);
             DeviceData::whereDeviceId($request->id)->whereCtrlCmd($request->ctrl_cmd_group)->update([
