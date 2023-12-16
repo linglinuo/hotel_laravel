@@ -20,11 +20,13 @@ class UserProfileController extends Controller
         foreach ($members as $member) {
             $user = User::whereEmail($member->email)->first();
             $profile = UserProfile::whereUserId($user->id)->first();
-            $member->user_id = $user->id;
-            $member->user_name = $user->name;
-            $member->user_email = $member->email;
-            $member->user_phone = $profile->phone;
-            $member->user_photo = $profile->photo;
+            if ($profile) {
+                $member->user_id = $user->id;
+                $member->user_name = $user->name;
+                $member->user_email = $member->email;
+                $member->user_phone = $profile->phone;
+                $member->user_photo = $profile->photo;
+            }
         }
 
         return response([
