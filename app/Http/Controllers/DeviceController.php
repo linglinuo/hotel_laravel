@@ -25,18 +25,6 @@ class DeviceController extends Controller
         ], Response::HTTP_OK);
     }
 
-    //前端觸發按鍵
-    public function controlDevice(Request $request, $uuid)
-    {
-        DeviceData::where('device_id', $uuid)->where('ctrl_cmd', $request->ctrl_cmd)->update([
-            'trigger' => true,
-        ]);
-
-        return response([
-            'message' => 'Device trigger!',
-        ], Response::HTTP_OK);
-    }
-
     //硬體若已觸發
     public function controlDeviceOK(Request $request) //post
     {
@@ -52,7 +40,10 @@ class DeviceController extends Controller
     //若硬體抓trigger為True則get ctrl_cmd
     public function triggerOrNot(Request $request) //post
     {
-        $data = DeviceData::select('ctrl_cmd')->where('device_id', $request->device_id)->where('trigger', true)->get();
+        $data = DeviceData::select('ctrl_cmd')
+            ->where('device_id', $request->device_id)
+            ->where('trigger', true)
+            ->get();
 
         return response([
             'message' => 'Need trigger',
