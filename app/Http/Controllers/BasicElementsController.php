@@ -118,6 +118,7 @@ class BasicElementsController extends Controller
                 "default_value" => $basicElement['default_value'] == null ? "" : $basicElement['default_value'],
             ]);
             DeviceData::whereDeviceId($basicElement['uuid'])
+            ->where('ctrl_cmd', $request->ctrl_cmd)
             ->whereNotIn('ctrl_cmd', ['dht'])
             ->update([
                 'trigger' => 1,
