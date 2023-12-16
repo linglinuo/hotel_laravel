@@ -98,13 +98,32 @@ class BasicElementsController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        $BasicElement = BasicElement::find($id);
-        $BasicElement->first()->delete();
+        BasicElement::whereId($id)->delete();
+        DeviceData::whereBasicElementId($id)->update([
+            "basic_element_id" => null,
+        ]);
 
         return response([
             'message' => 'BasicElement deleted successfully!',
+        ], Response::HTTP_OK);
+    }
+
+    public function triggerElement(Request $request)
+    {
+        foreach ($request->basicElements as $basicElement) {
+            BasicElement::whereId($basicElement['id'])->update([
+                "value" => $basicElement['value'],
+                "default_value" => $basicElement['default_value'] == null ? "" : $basicElement['default_value'],
+            ]);
+            DeviceData::whereDeviceId($basicElement['uuid'])->update([
+                'trigger' => 1,
+            ]);
+        }
+
+        return response([
+            'message' => 'Device trigger successfully!',
         ], Response::HTTP_OK);
     }
 }

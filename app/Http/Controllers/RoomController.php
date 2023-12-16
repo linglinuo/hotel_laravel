@@ -25,7 +25,7 @@ class RoomController extends Controller
         ]);
 
         foreach ($rooms as $room) {
-            if($room->email) {
+            if ($room->email) {
                 $user = User::whereEmail($room->email)->first();
                 $profile = UserProfile::whereUserId($user->id)->first();
                 $room->user_name = $user->name;
@@ -50,10 +50,12 @@ class RoomController extends Controller
             foreach ($sharedUsers as $users) {
                 $user = User::find($users->user_id);
                 $userProfile = UserProfile::whereUserId($users->user_id)->first();
-                $users->name = $user->name;
-                $users->email = $user->email;
-                $users->phone = $userProfile->phone;
-                $users->photo = $userProfile->photo;
+                if ($user && $userProfile) {
+                    $users->name = $user->name;
+                    $users->email = $user->email;
+                    $users->phone = $userProfile->phone;
+                    $users->photo = $userProfile->photo;
+                }
             }
             $room->no = $roomInfo->no;
             $room->type = $roomInfo->type;
@@ -80,12 +82,14 @@ class RoomController extends Controller
         foreach ($roomUser as $roomUserInfo) {
             $userInfo = User::find($roomUserInfo->user_id);
             $userProfileInfo = UserProfile::whereUserId($roomUserInfo->user_id)->first();
-            $user[] = [
-                "name" => $userInfo->name,
-                "email" => $userInfo->email,
-                "phone" => $userProfileInfo->phone,
-                "img" => $userProfileInfo->photo,
-            ];
+            if ($userInfo && $userProfileInfo) {
+                $user[] = [
+                    "name" => $userInfo->name,
+                    "email" => $userInfo->email,
+                    "phone" => $userProfileInfo->phone,
+                    "img" => $userProfileInfo->photo,
+                ];
+            }
         }
 
         return response([
@@ -117,7 +121,7 @@ class RoomController extends Controller
             'email' => 'nullable|string',
             'info' => 'string',
         ]);
-        
+
         $return_id = '';
         if (Room::where('id', $id)->first()) {
             $return_id = $id;
@@ -247,9 +251,10 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        Room::where('id', $request->room()->id)->first()->delete();
+        RoomMember::where('room_id', $id)->delete();
+        Room::where('id', $id)->first()->delete();
 
         return response([
             'message' => 'Room deleted successfully!',

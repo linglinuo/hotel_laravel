@@ -49,7 +49,7 @@ Route::group(['middleware' => ['api', 'auth:sanctum', 'is_verify_email']], funct
         Route::put('/room/info/{id}/img', 'updateimg')->name('room.updateimg');
         Route::put('/room/info/{id}/member', 'updateroommember')->name('room.updateroommember');
         Route::delete('/room/info/{id}/member', 'removeroommember')->name('room.removeroommember');
-        Route::delete('/room/delete', 'destroy')->name('room.delete');
+        Route::delete('/room/delete/{id}', 'destroy')->name('room.delete');
     });
 });
 
@@ -69,7 +69,9 @@ Route::controller(DeviceController::class)->group(function () {
 Route::controller(BasicElementsController::class)->group(function () {
     Route::get('/basic-element/room/{id}', 'index')->name('basicElement.index');
     Route::get('/basic-element/{id}', 'get')->name('basicElement.get');
+    Route::delete('/basic-element/delete/{id}', 'destroy')->name('basicElement.delete');
     Route::put('/basic-element', 'update')->name('basicElement.update');
+    Route::put('/basic-element/trigger', 'triggerElement')->name('basicElement.triggerElement');
 });
 Route::get('/test', function () {
     return 1;
