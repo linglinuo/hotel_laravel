@@ -78,7 +78,7 @@ class DeviceController extends Controller
     //前端 get 後端儲存的 ctrl cmd
     public function getDeviceCtrlCmd($id)
     {
-        $data = DeviceData::whereDeviceId($id)->get();
+        $data = DeviceData::whereDeviceId($id)->where('ctrl_cmd', '!=', 'dht')->get();
         $ctrlCmd = [];
         foreach ($data as $d) {
             $ctrlCmd[] = $d->ctrl_cmd;

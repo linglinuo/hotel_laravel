@@ -6,6 +6,8 @@ use App\Models\Room;
 use App\Models\RoomMember;
 use App\Models\User;
 use App\Models\UserProfile;
+use App\Models\Device;
+use App\Models\DeviceData;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -77,6 +79,8 @@ class RoomController extends Controller
     public function get(Request $request, $id)
     {
         $room = Room::find($id);
+        $device = Device::whereRoomId($id)->first();
+        $deviceData = DeviceData::whereDeviceId($device->device_id)->whereCtrlCmd('dht')->first();
         $roomUser = RoomMember::whereRoomId($id)->get();
         $user = [];
         foreach ($roomUser as $roomUserInfo) {
@@ -102,7 +106,9 @@ class RoomController extends Controller
                     'room_name' => $room->room_name,
                     'status' => $room->status,
                     'info' => $room->info,
-                    "img" => $room->photo
+                    "img" => $room->photo,
+                    'temp' => $deviceData->temp,
+                    'humidity' => $deviceData->humidity,
                 ]
             ]
         ], Response::HTTP_OK);
