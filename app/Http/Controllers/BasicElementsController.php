@@ -119,7 +119,7 @@ class BasicElementsController extends Controller
             ]);
             if ($basicElement['ctrl_cmd'] != 'dht') {
                 DeviceData::whereDeviceId($basicElement['uuid'])
-                    ->where(['ctrl_cmd'], $basicElement->ctrl_cmd)
+                    ->where('ctrl_cmd', $basicElement['ctrl_cmd'])
                     ->update([
                         'trigger' => 1,
                     ]);
