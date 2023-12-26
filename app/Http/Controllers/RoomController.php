@@ -80,7 +80,10 @@ class RoomController extends Controller
     {
         $room = Room::find($id);
         $device = Device::whereRoomId($id)->first();
-        $deviceData = DeviceData::whereDeviceId($device->device_id)->whereCtrlCmd('dht')->first();
+        if($device)
+        {
+            $deviceData = DeviceData::whereDeviceId($device->device_id)->whereCtrlCmd('dht')->first();
+        }
         $roomUser = RoomMember::whereRoomId($id)->get();
         $user = [];
         foreach ($roomUser as $roomUserInfo) {
