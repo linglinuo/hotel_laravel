@@ -79,8 +79,7 @@ class RoomController extends Controller
     public function get(Request $request, $id)
     {
         $room = Room::find($id);
-        $device = Device::whereRoomId($id)->first();
-        $deviceData = DeviceData::whereDeviceId($device->device_id)->whereCtrlCmd('dht')->first();
+        
         $roomUser = RoomMember::whereRoomId($id)->get();
         $user = [];
         foreach ($roomUser as $roomUserInfo) {
@@ -95,8 +94,29 @@ class RoomController extends Controller
                 ];
             }
         }
+        $device = Device::whereRoomId($id)->first();
+        if($device)
+        {
+            $deviceData = DeviceData::whereDeviceId($device->device_id)->whereCtrlCmd('dht')->first();
+            return response([
+                'message' => 'user profile',
+                'data' => [
+                    "user" => $user,
+                    "room" => [
+                        'no' => $room->no,
+                        'type' => $room->type,
+                        'room_name' => $room->room_name,
+                        'status' => $room->status,
+                        'info' => $room->info,
+                        "img" => $room->photo,
+                        'temp' => $deviceData->temp,
+                        'humidity' => $deviceData->humidity,
+                    ]
+                ]
+            ], Response::HTTP_OK);
+        }
 
-        return response([
+        else return response([
             'message' => 'user profile',
             'data' => [
                 "user" => $user,
@@ -107,8 +127,6 @@ class RoomController extends Controller
                     'status' => $room->status,
                     'info' => $room->info,
                     "img" => $room->photo,
-                    'temp' => $deviceData->temp,
-                    'humidity' => $deviceData->humidity,
                 ]
             ]
         ], Response::HTTP_OK);
